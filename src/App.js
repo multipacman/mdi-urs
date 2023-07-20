@@ -7,6 +7,7 @@ import UserLogin from './Pages/User/UserLoginPage';
 import UserRegister from './Pages/User/UserRegisterPage';
 import UserSuccess from './Pages/User/UserSuccessPage';
 import ProtectedRoute from './Utils/ProtectedRoute';
+import DashboardProfileEdit from './Pages/Dashboard/DashboardProfileEdit';
 
 function App() {
   return (
@@ -21,6 +22,10 @@ function App() {
               <Route path="/user-success" element={<UserSuccess />} />
               <Route element={<ProtectedRoute />}>
                 <Route path="/profile" element={<Dashboard />} />
+                <Route
+                  path="/profile-edit"
+                  element={<DashboardProfileEdit />}
+                />
               </Route>
             </Routes>
           </BrowserRouter>
