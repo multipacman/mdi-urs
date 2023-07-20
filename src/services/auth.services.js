@@ -44,10 +44,19 @@ const retrieveUserAccessToken = () => {
   return JSON.parse(localStorage.getItem('authToken'))?.access_token;
 };
 
+const isLoggedIn = () => {
+  return (
+    retrieveUserAccessToken() !== null &&
+    retrieveUserAccessToken() !== undefined &&
+    retrieveUserAccessToken() !== ''
+  );
+};
+
 const authService = {
   userLogin,
   storeUserAccessToken,
   retrieveUserAccessToken,
+  isLoggedIn,
 };
 
 export default authService;

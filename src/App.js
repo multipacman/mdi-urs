@@ -6,6 +6,7 @@ import Dashboard from './Pages/Dashboard/DashboardPage';
 import UserLogin from './Pages/User/UserLoginPage';
 import UserRegister from './Pages/User/UserRegisterPage';
 import UserSuccess from './Pages/User/UserSuccessPage';
+import ProtectedRoute from './Utils/ProtectedRoute';
 
 function App() {
   return (
@@ -18,7 +19,9 @@ function App() {
               <Route path="/" element={<UserLogin />} />
               <Route path="/register" element={<UserRegister />} />
               <Route path="/user-success" element={<UserSuccess />} />
-              <Route path="/profile" element={<Dashboard />} />
+              <Route element={<ProtectedRoute />}>
+                <Route path="/profile" element={<Dashboard />} />
+              </Route>
             </Routes>
           </BrowserRouter>
         </Grid>
