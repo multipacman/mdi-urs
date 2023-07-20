@@ -12,10 +12,13 @@ import {
   Text,
 } from '@chakra-ui/react';
 import { useDispatch, useSelector } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
 
 export default function Navbar(props) {
   const user = useSelector(state => state.user);
   let children = { ...props.children };
+
+  const navigate = useNavigate();
 
   return (
     <>
@@ -53,11 +56,19 @@ export default function Navbar(props) {
                   alignItems={'center'}
                   borderRadius={'lg'}
                 >
-                  <MenuItem bg={'gray.300'} fontSize={'md'}>
+                  <MenuItem
+                    bg={'gray.300'}
+                    fontSize={'md'}
+                    onClick={() => navigate('/profile-edit')}
+                  >
                     Edit Profile
                   </MenuItem>
                   <MenuDivider mx={2} />
-                  <MenuItem bg={'gray.300'} fontSize={'md'}>
+                  <MenuItem
+                    bg={'gray.300'}
+                    fontSize={'md'}
+                    onClick={() => navigate('/profile')}
+                  >
                     Sign Out
                   </MenuItem>
                 </MenuList>
