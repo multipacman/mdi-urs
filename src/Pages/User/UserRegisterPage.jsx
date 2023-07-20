@@ -1,4 +1,4 @@
-import React, { useRef } from 'react';
+import React, { useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ChevronLeftIcon } from '@chakra-ui/icons';
 import {
@@ -22,24 +22,70 @@ import {
 } from '@chakra-ui/react';
 import { Formik, Form, Field } from 'formik';
 import * as Yup from 'yup';
+import userService from '../../services/user.services';
+import { SingleDatepicker } from 'chakra-dayzed-datepicker';
+import { CustomToast } from '../../Components/Common/ToastNotification';
 
 export default function UserRegister() {
+  const [checkEmail, setCheckEmail] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [date, setDate] = useState(new Date());
+  const { toastNotification } = CustomToast();
+
   let navigate = useNavigate();
   const formRef = useRef(null);
 
   const validationSchema = Yup.object({
     first_name: Yup.string().required('First name is required'),
     last_name: Yup.string().required('Last name is required'),
-    email: Yup.string().email('Please type a valid email').required(),
+    email: Yup.string()
+      .email('Please type a valid email')
+      .required('Email is required'),
+    dob: Yup.date()
+      .max(new Date(), 'Select a valid date')
+      .required('DOB is required'),
     mobile: Yup.string()
       .matches(
         /^(\+\d{1,3}[- ]?)?\d{10}$/,
         'Please enter a valid phone number & must be exactly 10 digits'
       )
-      .length(10),
-    password: Yup.string().min(4).required(),
-    re_password: Yup.string().min(4).required(),
+      .length(10)
+      .required('Mobile is required'),
+    password: Yup.string().min(4).required('Password is required'),
+    re_password: Yup.string()
+      .min(4)
+      .required('Re-password is required')
+      .oneOf([Yup.ref('password'), null], 'Password does not match'),
   });
+
+  const handleSubmit = async values => {
+    let payload = {
+      email: values.email,
+      first_name: values.first_name,
+      last_name: values.last_name,
+      password: values.password,
+      confirm_password: values.re_password,
+      dob: date.toISOString().substring(0, 10),
+      mobile_number: values.mobile,
+      gender: 'male',
+    };
+
+    userService
+      .registerNewUser({ payload })
+      .then(res => {
+        if (res.status === 200) {
+          navigate('/user-success');
+          setIsLoading(false);
+        }
+      })
+      .catch(e => {
+        toastNotification({
+          title: 'Something went wrong!',
+          message: 'Please try again.',
+          type: 'error',
+        });
+      });
+  };
 
   return (
     <Box paddingTop={'4%'} bg={'blue.600'}>
@@ -74,20 +120,21 @@ export default function UserRegister() {
             <CardBody>
               <Formik
                 innerRef={formRef}
-                enableReinitialize
+                // enableReinitialize
                 initialValues={{
                   first_name: '',
                   last_name: '',
                   email: '',
+                  dob: date,
                   mobile: '',
                   password: '',
                   re_password: '',
                 }}
                 validationSchema={validationSchema}
-                // onSubmit={async values => {
-                //   await handleSubmit(values);
-                //   // setIsLoading(true);
-                // }}
+                onSubmit={async values => {
+                  await handleSubmit(values);
+                  setIsLoading(true);
+                }}
               >
                 {({ values, handleChange, errors, touched }) => {
                   return (
@@ -135,7 +182,9 @@ export default function UserRegister() {
 
                       <FormControl
                         mt={4}
-                        isInvalid={errors.email && touched.email}
+                        isInvalid={
+                          (errors.email && touched.email) || checkEmail.exist
+                        }
                       >
                         <FormLabel fontWeight={'bold'}>Email</FormLabel>
                         <Field
@@ -144,9 +193,32 @@ export default function UserRegister() {
                           id="email"
                           placeholder="Enter email"
                           onChange={handleChange}
+                          onBlur={() => {
+                            userService
+                              .emailAvailabilityCheck(values.email)
+                              .then(res => {
+                                setCheckEmail(res.data.result);
+                              });
+                          }}
                           value={values.email}
                         />
-                        <FormErrorMessage>{errors.email}</FormErrorMessage>
+                        <FormErrorMessage textAlign={'left'}>
+                          {errors.email || checkEmail.message}
+                        </FormErrorMessage>
+                      </FormControl>
+
+                      <FormControl mt={4} isInvalid={errors.dob && touched.dob}>
+                        <FormLabel fontWeight={'bold'}>Date</FormLabel>
+                        <SingleDatepicker
+                          name="dob"
+                          id="dob"
+                          date={date}
+                          onDateChange={e => {
+                            setDate(e);
+                          }}
+                          maxDate={new Date()}
+                        />
+                        <FormErrorMessage>{errors.dob}</FormErrorMessage>
                       </FormControl>
 
                       <FormControl
@@ -188,6 +260,7 @@ export default function UserRegister() {
                       <FormControl
                         mt={4}
                         isInvalid={errors.re_password && touched.re_password}
+                        isDisabled={!values.password.length}
                       >
                         <FormLabel fontWeight={'bold'}>
                           Re-enter Password
@@ -212,7 +285,8 @@ export default function UserRegister() {
                         colorScheme="blue"
                         variant="solid"
                         type="submit"
-                        onClick={() => navigate('/user-success')}
+                        isLoading={isLoading}
+                        // onClick={() => navigate('/user-success')}
                       >
                         Create Account
                       </Button>
