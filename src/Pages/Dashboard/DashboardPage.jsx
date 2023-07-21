@@ -1,13 +1,10 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import Navbar from '../../Components/Navigation/Navbar';
 import { getUserDetails } from '../../slices/user';
 
 import {
   Box,
-  Button,
   Center,
-  Flex,
   Grid,
   GridItem,
   HStack,
@@ -15,11 +12,9 @@ import {
   IconButton,
   Image,
   ScaleFade,
-  SimpleGrid,
   Spinner,
   Text,
 } from '@chakra-ui/react';
-import { useNavigate } from 'react-router-dom';
 import { AddIcon } from '@chakra-ui/icons';
 import { useFileUpload } from 'use-file-upload';
 import userService from '../../services/user.services';
@@ -29,19 +24,13 @@ export default function Dashboard() {
   const user = useSelector(state => state.user);
   const auth = useSelector(state => state.auth);
   const [uploadButtonLoading, setUploadButtonLoading] = useState(false);
-  const [file, selectFile] = useFileUpload();
+  const [files, selectFile] = useFileUpload();
   const { toastNotification } = CustomToast();
-
-  const navigate = useNavigate();
 
   const dispatch = useDispatch();
 
-  useEffect(() => {
-    if (!!auth.access_token || !!user) {
-      dispatch(getUserDetails(auth.access_token));
-    }
-
-    if (!!file) {
+  const handleUpload = async () => {
+    selectFile({ accept: 'image/*' }, ({ name, size, source, file }) => {
       setUploadButtonLoading(true);
       userService
         .updateUserProfilePic(file, auth.access_token)
@@ -68,8 +57,8 @@ export default function Dashboard() {
           });
           setUploadButtonLoading(true);
         });
-    }
-  }, [auth, file, dispatch]);
+    });
+  };
 
   return (
     <>
@@ -87,7 +76,7 @@ export default function Dashboard() {
                       >
                         <Image
                           src={
-                            file?.source ||
+                            files?.source ||
                             user.accountInfo.patient.profile_image.resource
                           }
                           // fallbackSrc="https://placehold.co/150x150/000000/FFF?text=Loading..."
@@ -104,22 +93,20 @@ export default function Dashboard() {
                           position={'absolute'}
                           icon={<AddIcon />}
                           isLoading={uploadButtonLoading}
-                          onClick={() => selectFile({ accept: 'image/*' })}
+                          onClick={() => handleUpload()}
                         />
                       </ScaleFade>
                     </Box>
                     <Box ml={7}>
-                      <Heading textAlign={'start'}>
-                        Welcome <br />
-                        <Heading color={'gray.500'}>
-                          {user.accountInfo?.patient?.gender === null ||
-                          user.accountInfo?.patient?.gender === 'other'
-                            ? null
-                            : user.accountInfo?.patient?.gender === 'male'
-                            ? 'Mr '
-                            : 'Mrs '}
-                          {user.accountInfo.patient.name}
-                        </Heading>
+                      <Heading textAlign={'start'}>Welcome</Heading>
+                      <Heading color={'gray.500'}>
+                        {user.accountInfo?.patient?.gender === null ||
+                        user.accountInfo?.patient?.gender === 'other'
+                          ? null
+                          : user.accountInfo?.patient?.gender === 'male'
+                          ? 'Mr '
+                          : 'Mrs '}
+                        {user.accountInfo.patient.name}
                       </Heading>
                     </Box>
                   </HStack>
@@ -179,7 +166,7 @@ export default function Dashboard() {
                         textAlign={'end'}
                         fontWeight={'semibold'}
                       >
-                        {user.accountInfo.patient.gender}
+                        {user.accountInfo.patient.gender ?? 'N/A'}
                       </Text>
                     </Box>
                   </HStack>

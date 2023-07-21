@@ -1,25 +1,17 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import Navbar from '../../Components/Navigation/Navbar';
 import { getUserDetails } from '../../slices/user';
 import {
   Box,
   Button,
-  Card,
   ScaleFade,
-  CardBody,
-  CardHeader,
   Center,
   FormControl,
   FormErrorMessage,
   FormLabel,
   HStack,
   Heading,
-  IconButton,
   Input,
-  InputGroup,
-  InputLeftAddon,
-  Text,
   Spinner,
   VStack,
   useRadioGroup,
@@ -29,11 +21,9 @@ import { Formik, Form, Field } from 'formik';
 import * as Yup from 'yup';
 import { SingleDatepicker } from 'chakra-dayzed-datepicker';
 
-import { useNavigate } from 'react-router-dom';
 import RadioCard from '../../Components/Common/RadioCard';
 import userService from '../../services/user.services';
 import { CustomToast } from '../../Components/Common/ToastNotification';
-import authService from '../../services/auth.services';
 
 export default function DashboardProfileEdit() {
   const user = useSelector(state => state.user);
@@ -91,7 +81,6 @@ export default function DashboardProfileEdit() {
           message: 'Please try again.',
           type: 'error',
           variant: 'solid',
-          position: 'top',
           position: 'top-right',
           dashboard: true,
         });
@@ -111,12 +100,6 @@ export default function DashboardProfileEdit() {
   });
 
   const group = getRootProps();
-
-  useEffect(() => {
-    if (!!auth.access_token) {
-      dispatch(getUserDetails(auth.access_token));
-    }
-  }, [auth, dispatch]);
 
   return (
     <>
@@ -269,7 +252,8 @@ export default function DashboardProfileEdit() {
                                   Object.values(radio).includes(
                                     user.accountInfo.patient.gender
                                   ) &&
-                                  clicked === false
+                                  clicked === false &&
+                                  user.accountInfo.patient.gender !== null
                                 ) {
                                   let data = Object.assign(
                                     { ...radio },

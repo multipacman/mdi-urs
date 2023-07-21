@@ -20,6 +20,11 @@ const userSlice = createSlice({
   name: 'user',
   initialState,
   reducers: {
+    clearUserInfo: () => {
+      return {
+        accountInfo: null,
+      };
+    },
     // standard reducer logic, with auto-generated action types per reducer
   },
   extraReducers: builder => {
@@ -31,5 +36,7 @@ const userSlice = createSlice({
   },
 });
 
-const { reducer } = userSlice;
+const { reducer, actions } = userSlice;
+
+export const { clearUserInfo } = actions;
 export default reducer;

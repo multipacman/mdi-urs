@@ -47,7 +47,7 @@ const updateUserDetails = async (payload, accessToken) => {
 
 const updateUserProfilePic = async (payload, accessToken) => {
   const form = new FormData();
-  form.append('profile_image', payload.file);
+  form.append('profile_image', payload);
 
   return await axios.request({
     method: 'POST',

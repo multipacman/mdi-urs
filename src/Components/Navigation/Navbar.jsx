@@ -14,6 +14,7 @@ import {
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { clearAuthInfo } from '../../slices/auth';
+import { clearUserInfo } from '../../slices/user';
 import { getUserDetails } from '../../slices/user';
 import { useEffect } from 'react';
 
@@ -26,7 +27,7 @@ export default function Navbar(props) {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    if (!!auth.access_token || !!user) {
+    if (!!auth.access_token) {
       dispatch(getUserDetails(auth.access_token));
     }
   }, [auth, dispatch]);
@@ -77,7 +78,8 @@ export default function Navbar(props) {
                 >
                   <MenuItem
                     bg={'gray.300'}
-                    fontSize={'md'}
+                    fontSize={'sm'}
+                    fontWeight={'semibold'}
                     onClick={() => navigate('/profile-edit')}
                     _hover={{
                       color: 'blue.700',
@@ -88,9 +90,11 @@ export default function Navbar(props) {
                   <MenuDivider mx={2} />
                   <MenuItem
                     bg={'gray.300'}
-                    fontSize={'md'}
+                    fontSize={'sm'}
+                    fontWeight={'semibold'}
                     onClick={() => {
                       dispatch(clearAuthInfo());
+                      dispatch(clearUserInfo());
                       navigate('/');
                     }}
                     _hover={{

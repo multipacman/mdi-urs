@@ -22,11 +22,9 @@ export const CustomToast = () => {
       variant: newRes.variant || 'left-accent',
       duration: 1500,
       render: props => {
-        const {
-          isOpen: isVisible,
-          onClose,
-          onOpen,
-        } = Disclosure({ defaultIsOpen: true });
+        const { isOpen: isVisible, onClose } = Disclosure({
+          defaultIsOpen: true,
+        });
 
         return (
           isVisible && (
