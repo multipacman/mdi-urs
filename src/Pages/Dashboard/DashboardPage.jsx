@@ -36,10 +36,6 @@ export default function Dashboard() {
 
   const dispatch = useDispatch();
 
-  const handleChange = () => {
-    selectFile({ accept: 'image/*' });
-  };
-
   useEffect(() => {
     if (!!auth.access_token || !!user) {
       dispatch(getUserDetails(auth.access_token));
@@ -108,7 +104,7 @@ export default function Dashboard() {
                           position={'absolute'}
                           icon={<AddIcon />}
                           isLoading={uploadButtonLoading}
-                          onClick={() => handleChange()}
+                          onClick={() => selectFile({ accept: 'image/*' })}
                         />
                       </ScaleFade>
                     </Box>

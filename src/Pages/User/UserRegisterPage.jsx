@@ -59,6 +59,7 @@ export default function UserRegister() {
       .min(4)
       .required('Re-password is required')
       .oneOf([Yup.ref('password'), null], 'Password does not match'),
+    gender: Yup.string().required(),
   });
 
   const handleSubmit = async values => {
@@ -210,11 +211,13 @@ export default function UserRegister() {
                             placeholder="Enter email"
                             onChange={handleChange}
                             onBlur={() => {
-                              userService
-                                .emailAvailabilityCheck(values.email)
-                                .then(res => {
-                                  setCheckEmail(res.data.result);
-                                });
+                              if (values.email !== '') {
+                                userService
+                                  .emailAvailabilityCheck(values.email)
+                                  .then(res => {
+                                    setCheckEmail(res.data.result);
+                                  });
+                              }
                             }}
                             value={values.email}
                           />
@@ -263,23 +266,27 @@ export default function UserRegister() {
                           <FormErrorMessage>{errors.mobile}</FormErrorMessage>
                         </FormControl>
 
-                        <HStack
-                          mt={8}
-                          justifyContent={'space-between'}
-                          {...group}
-                          onChange={handleChange}
-                          name="gender"
-                          id="gender"
-                        >
-                          {options.map(value => {
-                            const radio = getRadioProps({ value });
-                            return (
-                              <RadioCard key={value} props={radio}>
-                                {value}
-                              </RadioCard>
-                            );
-                          })}
-                        </HStack>
+                        <FormControl mt={4} isInvalid={errors.gender}>
+                          <FormLabel fontWeight={'bold'}>Gender</FormLabel>
+                          <HStack
+                            // mt={8}
+                            justifyContent={'space-between'}
+                            {...group}
+                            onChange={handleChange}
+                            name="gender"
+                            id="gender"
+                          >
+                            {options.map(value => {
+                              const radio = getRadioProps({ value });
+                              return (
+                                <RadioCard key={value} props={radio}>
+                                  {value}
+                                </RadioCard>
+                              );
+                            })}
+                          </HStack>
+                          <FormErrorMessage>{errors.gender}</FormErrorMessage>
+                        </FormControl>
 
                         <FormControl
                           mt={4}

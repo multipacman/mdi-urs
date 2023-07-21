@@ -39,6 +39,7 @@ export default function DashboardProfileEdit() {
   const user = useSelector(state => state.user);
   const auth = useSelector(state => state.auth);
 
+  const [checkEmail, setCheckEmail] = useState(false);
   const [date, setDate] = useState(null);
   const [clicked, setClicked] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -194,7 +195,10 @@ export default function DashboardProfileEdit() {
 
                           <FormControl
                             mt={4}
-                            isInvalid={errors.email && touched.email}
+                            isInvalid={
+                              (errors.email && touched.email) ||
+                              checkEmail.exist
+                            }
                           >
                             <FormLabel fontWeight={'bold'}>Email</FormLabel>
                             <Field
@@ -203,6 +207,18 @@ export default function DashboardProfileEdit() {
                               id="email"
                               placeholder="Enter email"
                               onChange={handleChange}
+                              onBlur={() => {
+                                if (
+                                  values.email !== user.accountInfo.email &&
+                                  values.email !== ''
+                                ) {
+                                  userService
+                                    .emailAvailabilityCheck(values.email)
+                                    .then(res => {
+                                      setCheckEmail(res.data.result);
+                                    });
+                                }
+                              }}
                               value={values.email}
                             />
                             <FormHelperText noOfLines={2} textAlign={'left'}>
@@ -210,7 +226,9 @@ export default function DashboardProfileEdit() {
                               implemented
                             </FormHelperText>
                             <FormErrorMessage textAlign={'left'}>
-                              {errors.email}
+                              {errors.email ||
+                                (checkEmail.message &&
+                                  'Email address is already exist in the system.')}
                             </FormErrorMessage>
                           </FormControl>
 

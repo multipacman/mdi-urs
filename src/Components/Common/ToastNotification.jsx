@@ -20,9 +20,8 @@ export const CustomToast = () => {
       status: newRes.type,
       position: newRes.position || 'top-right',
       variant: newRes.variant || 'left-accent',
-      duration: 5000,
+      duration: 1500,
       render: props => {
-        console.log(props);
         const {
           isOpen: isVisible,
           onClose,
