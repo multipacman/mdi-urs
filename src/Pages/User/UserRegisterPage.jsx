@@ -59,7 +59,7 @@ export default function UserRegister() {
       .min(4)
       .required('Re-password is required')
       .oneOf([Yup.ref('password'), null], 'Password does not match'),
-    gender: Yup.string().required(),
+    gender: Yup.string().required('Gender is required'),
   });
 
   const handleSubmit = async values => {
