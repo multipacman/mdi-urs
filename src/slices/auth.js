@@ -23,6 +23,15 @@ const authSlice = createSlice({
   initialState,
   reducers: {
     // standard reducer logic, with auto-generated action types per reducer
+    clearAuthInfo: () => {
+      localStorage.removeItem('authToken');
+      return {
+        token_type: null,
+        expires_in: null,
+        access_token: null,
+        refresh_token: null,
+      };
+    },
   },
   extraReducers: builder => {
     // Add reducers for additional action types here, and handle loading state as needed
@@ -40,5 +49,7 @@ const authSlice = createSlice({
   },
 });
 
-const { reducer } = authSlice;
+const { reducer, actions } = authSlice;
+
+export const { clearAuthInfo } = actions;
 export default reducer;

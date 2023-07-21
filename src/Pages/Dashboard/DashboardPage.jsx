@@ -12,6 +12,7 @@ import {
   GridItem,
   HStack,
   Heading,
+  IconButton,
   Image,
   ScaleFade,
   SimpleGrid,
@@ -19,20 +20,57 @@ import {
   Text,
 } from '@chakra-ui/react';
 import { useNavigate } from 'react-router-dom';
+import { AddIcon } from '@chakra-ui/icons';
+import { useFileUpload } from 'use-file-upload';
+import userService from '../../services/user.services';
+import { CustomToast } from '../../Components/Common/ToastNotification';
 
 export default function Dashboard() {
   const user = useSelector(state => state.user);
   const auth = useSelector(state => state.auth);
+  const [file, selectFile] = useFileUpload();
+  const { toastNotification } = CustomToast();
 
-  let navigate = useNavigate();
+  const navigate = useNavigate();
 
   const dispatch = useDispatch();
+
+  const handleChange = () => {
+    // console.log(e);
+    selectFile({ accept: 'image/*' });
+  };
+
+  // console.log(file);
 
   useEffect(() => {
     if (!!auth.access_token || !!user) {
       dispatch(getUserDetails(auth.access_token));
     }
-  }, [auth, dispatch]);
+
+    if (!!file) {
+      userService
+        .updateUserProfilePic(file, auth.access_token)
+        .then(res => {
+          dispatch(getUserDetails(auth.access_token));
+          toastNotification({
+            title: 'Profile picture uploaded!',
+            message: 'Your information has been updated successfully.',
+            type: 'success',
+            variant: 'solid',
+            position: 'bottom',
+          });
+        })
+        .catch(e =>
+          toastNotification({
+            title: 'Something went wrong!',
+            message: 'Please try again.',
+            type: 'error',
+            variant: 'solid',
+            position: 'bottom',
+          })
+        );
+    }
+  }, [auth, file, dispatch]);
 
   return (
     <>
@@ -44,15 +82,36 @@ export default function Dashboard() {
                 <GridItem my={5} w="100%" h="auto">
                   <HStack>
                     <Box>
-                      <Image
-                        src="gibbresh.png"
-                        fallbackSrc="https://via.placeholder.com/150"
-                      />
+                      <ScaleFade
+                        initialScale={0.1}
+                        in={user.accountInfo.patient.profile_image.resource}
+                      >
+                        <Image
+                          src={
+                            file?.source ||
+                            user.accountInfo.patient.profile_image.resource
+                          }
+                          // fallbackSrc="https://placehold.co/150x150/000000/FFF?text=Loading..."
+                          boxSize="150px"
+                        />
+                        <IconButton
+                          isRound={true}
+                          variant="solid"
+                          colorScheme="gray"
+                          aria-label="Done"
+                          fontSize="20px"
+                          ml={'35px'}
+                          mt={'-20px'}
+                          position={'absolute'}
+                          icon={<AddIcon />}
+                          onClick={() => handleChange()}
+                        />
+                      </ScaleFade>
                     </Box>
-                    <Box>
+                    <Box ml={7}>
                       <Heading textAlign={'start'}>
                         Welcome <br />
-                        {user.accountInfo.name}
+                        {user.accountInfo.patient.name}
                       </Heading>
                     </Box>
                   </HStack>
@@ -82,7 +141,7 @@ export default function Dashboard() {
                     </Box>
                     <Box w={'200px'}>
                       <Text w={'100%'} textAlign={'end'}>
-                        {user.accountInfo.name}
+                        {user.accountInfo.patient.full_name}
                       </Text>
                     </Box>
                   </HStack>

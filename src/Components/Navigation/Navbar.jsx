@@ -13,30 +13,47 @@ import {
 } from '@chakra-ui/react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
+import { clearAuthInfo } from '../../slices/auth';
+import { getUserDetails } from '../../slices/user';
+import { useEffect } from 'react';
 
 export default function Navbar(props) {
   const user = useSelector(state => state.user);
+  const auth = useSelector(state => state.auth);
   let children = { ...props.children };
 
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    if (!!auth.access_token || !!user) {
+      dispatch(getUserDetails(auth.access_token));
+    }
+  }, [auth, dispatch]);
 
   return (
     <>
       <Box hidden={!user.accountInfo} bg={'gray.300'} h={'70px'} px={4}>
         <Flex h={16} alignItems={'center'} justifyContent={'space-between'}>
-          <Box textTransform={'uppercase'} as={'b'}>
+          <Box
+            textTransform={'uppercase'}
+            as={'b'}
+            onClick={() => navigate('/profile')}
+            cursor={'default'}
+          >
             ABC Company
           </Box>
 
           <Flex alignItems={'center'}>
-            <Stack direction={'row'} spacing={7}>
+            <Stack direction={'row'} spacing={5}>
               <Text as={'b'}>
-                {user.accountInfo?.patient?.gender === null
+                {user.accountInfo?.patient?.gender === null ||
+                user.accountInfo?.patient?.gender === 'other'
                   ? null
                   : user.accountInfo?.patient?.gender === 'male'
                   ? 'Mr '
                   : 'Mrs '}
-                {user?.accountInfo?.name}
+                {user?.accountInfo?.patient?.name}
               </Text>
               <Menu>
                 <MenuButton
@@ -48,7 +65,7 @@ export default function Navbar(props) {
                 >
                   <Avatar
                     size={'sm'}
-                    src={'https://avatars.dicebear.com/api/male/username.svg'}
+                    src={user.accountInfo?.patient?.profile_image?.thumb}
                   />
                 </MenuButton>
                 <MenuList
@@ -67,7 +84,10 @@ export default function Navbar(props) {
                   <MenuItem
                     bg={'gray.300'}
                     fontSize={'md'}
-                    onClick={() => navigate('/profile')}
+                    onClick={() => {
+                      dispatch(clearAuthInfo());
+                      navigate('/');
+                    }}
                   >
                     Sign Out
                   </MenuItem>

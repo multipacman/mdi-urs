@@ -23,37 +23,95 @@ import {
   Spinner,
   VStack,
   useRadioGroup,
+  FormHelperText,
 } from '@chakra-ui/react';
 import { Formik, Form, Field } from 'formik';
+import * as Yup from 'yup';
 import { SingleDatepicker } from 'chakra-dayzed-datepicker';
 
 import { useNavigate } from 'react-router-dom';
 import RadioCard from '../../Components/Common/RadioCard';
+import userService from '../../services/user.services';
+import { CustomToast } from '../../Components/Common/ToastNotification';
+import authService from '../../services/auth.services';
 
 export default function DashboardProfileEdit() {
-  const [date, setDate] = useState(new Date());
-  const [isLoading, setIsLoading] = useState(false);
-
   const user = useSelector(state => state.user);
   const auth = useSelector(state => state.auth);
 
-  const formRef = useRef(null);
+  const [date, setDate] = useState(null);
+  const [clicked, setClicked] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const { toastNotification } = CustomToast();
 
-  const navigate = useNavigate();
+  const formRef = useRef(null);
   const dispatch = useDispatch();
+
+  const validationSchema = Yup.object({
+    first_name: Yup.string().required('First name is required'),
+    last_name: Yup.string().required('Last name is required'),
+    email: Yup.string()
+      .email('Please type a valid email')
+      .required('Email is required'),
+    dob: Yup.date()
+      .max(new Date(), 'Select a valid date')
+      .required('DOB is required'),
+  });
+
+  const handleSubmit = async values => {
+    // console.log(values);
+    let payload = {
+      first_name: values.first_name,
+      last_name: values.last_name,
+      email: values.email,
+      dob: !date ? values.dob : date.toISOString().substring(0, 10),
+      gender: values.gender,
+    };
+
+    userService
+      .updateUserDetails(payload, auth.access_token)
+      .then(res => {
+        if (res.status === 200) {
+          dispatch(getUserDetails(auth.access_token));
+          toastNotification({
+            title: 'Change profile details!',
+            message: 'Your information has been updated successfully.',
+            type: 'success',
+            variant: 'solid',
+            position: 'bottom',
+          });
+          //   navigate('/user-success');
+          setIsLoading(false);
+        }
+      })
+      .catch(e => {
+        setIsLoading(false);
+        toastNotification({
+          title: 'Something went wrong!',
+          message: 'Please try again.',
+          type: 'error',
+          variant: 'solid',
+          position: 'bottom',
+        });
+      });
+  };
 
   const options = ['male', 'female', 'other'];
 
+  const checkClicked = () => {
+    setClicked(true);
+  };
+
   const { getRootProps, getRadioProps } = useRadioGroup({
     name: 'gender',
-    defaultValue: 'make',
-    onChange: console.log,
+    defaultValue: user.accountInfo?.patient.gender,
+    onChange: checkClicked,
   });
 
   const group = getRootProps();
 
   useEffect(() => {
-    if (!!auth.access_token || !!user) {
+    if (!!auth.access_token) {
       dispatch(getUserDetails(auth.access_token));
     }
   }, [auth, dispatch]);
@@ -71,19 +129,17 @@ export default function DashboardProfileEdit() {
                     innerRef={formRef}
                     // enableReinitialize
                     initialValues={{
-                      first_name: '',
-                      last_name: '',
-                      email: '',
-                      dob: '',
-                      mobile: '',
-                      password: '',
-                      re_password: '',
+                      first_name: user.accountInfo?.patient.first_name,
+                      last_name: user.accountInfo?.patient.last_name,
+                      email: user.accountInfo?.email,
+                      dob: user.accountInfo?.patient.dob,
+                      gender: user.accountInfo?.patient.gender,
                     }}
-                    // validationSchema={validationSchema}
-                    // onSubmit={async values => {
-                    //   await handleSubmit(values);
-                    //   setIsLoading(true);
-                    // }}
+                    validationSchema={validationSchema}
+                    onSubmit={async values => {
+                      await handleSubmit(values);
+                      setIsLoading(true);
+                    }}
                   >
                     {({ values, handleChange, errors, touched }) => {
                       return (
@@ -148,6 +204,10 @@ export default function DashboardProfileEdit() {
                               onChange={handleChange}
                               value={values.email}
                             />
+                            <FormHelperText noOfLines={2} textAlign={'left'}>
+                              email does not get updated via API call but is
+                              implemented
+                            </FormHelperText>
                             <FormErrorMessage textAlign={'left'}>
                               {errors.email}
                             </FormErrorMessage>
@@ -161,7 +221,11 @@ export default function DashboardProfileEdit() {
                             <SingleDatepicker
                               name="dob"
                               id="dob"
-                              date={date}
+                              date={
+                                !!date
+                                  ? date
+                                  : new Date(user.accountInfo.patient.dob)
+                              }
                               onDateChange={e => {
                                 setDate(e);
                               }}
@@ -174,11 +238,31 @@ export default function DashboardProfileEdit() {
                             mt={8}
                             justifyContent={'space-between'}
                             {...group}
+                            onChange={handleChange}
+                            name="gender"
+                            id="gender"
                           >
                             {options.map(value => {
                               const radio = getRadioProps({ value });
+
+                              const data = () => {
+                                if (
+                                  Object.values(radio).includes(
+                                    user.accountInfo.patient.gender
+                                  ) &&
+                                  clicked === false
+                                ) {
+                                  let data = Object.assign(
+                                    { ...radio },
+                                    { isChecked: true }
+                                  );
+                                  return data;
+                                }
+                                return radio;
+                              };
+
                               return (
-                                <RadioCard key={value} {...radio}>
+                                <RadioCard key={value} props={data()}>
                                   {value}
                                 </RadioCard>
                               );
@@ -193,7 +277,6 @@ export default function DashboardProfileEdit() {
                             variant="solid"
                             type="submit"
                             isLoading={isLoading}
-                            // onClick={() => navigate('/user-success')}
                           >
                             Update profile details
                           </Button>

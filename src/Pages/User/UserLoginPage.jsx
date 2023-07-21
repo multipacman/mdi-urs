@@ -14,6 +14,7 @@ import {
   Heading,
   Input,
   Link,
+  ScaleFade,
   Text,
   VStack,
 } from '@chakra-ui/react';
@@ -64,106 +65,113 @@ export default function UserLogin() {
 
   return (
     <Box paddingTop={'10%'} bg={'blue.600'}>
-      <Center>
-        <VStack>
-          <Heading ml={2} textColor={'white'} alignSelf={'start'} size={'xl'}>
-            Welcome Back
-          </Heading>
-          <Text
-            ml={2}
-            textColor={'whiteAlpha.800'}
-            alignSelf={'start'}
-            size={'sm'}
-            as={'b'}
-          >
-            Login to your account
-          </Text>
+      <ScaleFade initialScale={'0.9'} in={true}>
+        <Center>
+          <VStack>
+            <Heading ml={2} textColor={'white'} alignSelf={'start'} size={'xl'}>
+              Welcome Back
+            </Heading>
+            <Text
+              ml={2}
+              textColor={'whiteAlpha.800'}
+              alignSelf={'start'}
+              size={'sm'}
+              as={'b'}
+            >
+              Login to your account
+            </Text>
 
-          <Card w={[300, 400, 500]} borderRadius="2xl">
-            <CardHeader textAlign={'center'}>
-              <Heading textColor={'blue.600'} size="xl">
-                ABC COMPANY
-              </Heading>
-            </CardHeader>
-            <CardBody>
-              <Formik
-                innerRef={formRef}
-                enableReinitialize
-                initialValues={{ username: '', password: '' }}
-                validationSchema={validationSchema}
-                onSubmit={async values => {
-                  await handleSubmit(values);
-                  setIsLoading(true);
-                }}
-              >
-                {({ values, handleChange, errors, touched }) => {
-                  return (
-                    <Form>
-                      <FormControl
-                        isInvalid={errors.username && touched.username}
-                      >
-                        <FormLabel fontWeight={'bold'}>User Name</FormLabel>
-                        <Field
-                          as={Input}
-                          name="username"
-                          id="username"
-                          placeholder="Enter username"
-                          onChange={handleChange}
-                          value={values.username}
-                        />
-                        <FormErrorMessage>{errors.username}</FormErrorMessage>
-                      </FormControl>
-
-                      <FormControl
-                        mt={4}
-                        isInvalid={errors.password && touched.password}
-                      >
-                        <FormLabel fontWeight={'bold'}>Password</FormLabel>
-                        <Field
-                          as={Input}
-                          name="password"
-                          id="password"
-                          placeholder="Enter password"
-                          onChange={handleChange}
-                          value={values.password}
-                        />
-                        <FormErrorMessage>{errors.password}</FormErrorMessage>
-                      </FormControl>
-                      <Button
-                        size="lg"
-                        w={'100%'}
-                        mt={7}
-                        colorScheme="blue"
-                        variant="solid"
-                        type="submit"
-                        isLoading={isLoading}
-                        isDisabled={!values.username || !values.password}
-                      >
-                        Login
-                      </Button>
-                    </Form>
-                  );
-                }}
-              </Formik>
-            </CardBody>
-            <CardFooter mb={4}>
-              <Text as={'b'}>
-                Still no account?{' '}
-                <Link
-                  onClick={() => navigate('register')}
-                  textColor={'orange.400'}
+            <Card w={[300, 400, 500]} borderRadius="2xl">
+              <CardHeader textAlign={'center'}>
+                <Heading textColor={'blue.600'} size="xl">
+                  ABC COMPANY
+                </Heading>
+              </CardHeader>
+              <CardBody>
+                <Formik
+                  innerRef={formRef}
+                  enableReinitialize
+                  initialValues={{ username: '', password: '' }}
+                  validationSchema={validationSchema}
+                  onSubmit={async values => {
+                    await handleSubmit(values);
+                    setIsLoading(true);
+                  }}
                 >
-                  SIGNUP
-                </Link>{' '}
-                here
-              </Text>
-            </CardFooter>
-          </Card>
-          <Text ml={2} textColor={'white'} alignSelf={'start'} fontSize="15px">
-            Version 1.0
-          </Text>
-        </VStack>
-      </Center>
+                  {({ values, handleChange, errors, touched }) => {
+                    return (
+                      <Form>
+                        <FormControl
+                          isInvalid={errors.username && touched.username}
+                        >
+                          <FormLabel fontWeight={'bold'}>User Name</FormLabel>
+                          <Field
+                            as={Input}
+                            name="username"
+                            id="username"
+                            placeholder="Enter username"
+                            onChange={handleChange}
+                            value={values.username}
+                          />
+                          <FormErrorMessage>{errors.username}</FormErrorMessage>
+                        </FormControl>
+
+                        <FormControl
+                          mt={4}
+                          isInvalid={errors.password && touched.password}
+                        >
+                          <FormLabel fontWeight={'bold'}>Password</FormLabel>
+                          <Field
+                            as={Input}
+                            name="password"
+                            id="password"
+                            placeholder="Enter password"
+                            onChange={handleChange}
+                            value={values.password}
+                          />
+                          <FormErrorMessage>{errors.password}</FormErrorMessage>
+                        </FormControl>
+                        <Button
+                          size="lg"
+                          w={'100%'}
+                          mt={7}
+                          colorScheme="blue"
+                          variant="solid"
+                          type="submit"
+                          isLoading={isLoading}
+                          isDisabled={!values.username || !values.password}
+                        >
+                          Login
+                        </Button>
+                      </Form>
+                    );
+                  }}
+                </Formik>
+              </CardBody>
+              <CardFooter mb={4}>
+                <Text as={'b'}>
+                  Still no account?{' '}
+                  <Link
+                    onClick={() => navigate('register')}
+                    textColor={'orange.400'}
+                  >
+                    SIGNUP
+                  </Link>{' '}
+                  here
+                </Text>
+              </CardFooter>
+            </Card>
+            <Text
+              ml={2}
+              textColor={'white'}
+              alignSelf={'start'}
+              fontSize="15px"
+            >
+              Version 1.0
+            </Text>
+          </VStack>
+        </Center>
+      </ScaleFade>
     </Box>
   );
 }

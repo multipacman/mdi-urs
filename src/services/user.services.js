@@ -33,10 +33,41 @@ const emailAvailabilityCheck = async email => {
   });
 };
 
+const updateUserDetails = async (payload, accessToken) => {
+  // console.log(payload);
+  return await axios.request({
+    method: 'PUT',
+    url: `${API_URL}/api/v1/profile`,
+    data: payload,
+    headers: {
+      Accept: 'application/json',
+      Authorization: `Bearer ${accessToken}`,
+    },
+  });
+};
+
+const updateUserProfilePic = async (payload, accessToken) => {
+  const form = new FormData();
+  form.append('profile_image', payload.file);
+
+  return await axios.request({
+    method: 'POST',
+    url: `${API_URL}/api/v1/profile/avatar`,
+    data: form,
+    headers: {
+      Accept: 'application/json',
+      'Content-Type': 'multipart/form-data',
+      Authorization: `Bearer ${accessToken}`,
+    },
+  });
+};
+
 const userService = {
   getUserDetails,
   registerNewUser,
   emailAvailabilityCheck,
+  updateUserDetails,
+  updateUserProfilePic,
 };
 
 export default userService;

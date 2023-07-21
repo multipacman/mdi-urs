@@ -10,7 +10,7 @@ export const CustomToast = () => {
       description: newRes.message,
       status: newRes.type,
       position: newRes.position || 'top-right',
-      variant: 'left-accent',
+      variant: newRes.variant || 'left-accent',
       duration: 5000,
       isClosable: true,
     });
