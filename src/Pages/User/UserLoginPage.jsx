@@ -21,7 +21,6 @@ import {
 import { useDispatch, useSelector } from 'react-redux';
 import { getUserDetails } from '../../slices/user';
 import { userLogin } from '../../slices/auth';
-// import authService from '../../services/auth.services';
 import * as Yup from 'yup';
 import { Formik, Form, Field } from 'formik';
 import { CustomToast } from '../../Components/Common/ToastNotification';

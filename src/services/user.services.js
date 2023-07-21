@@ -34,7 +34,6 @@ const emailAvailabilityCheck = async email => {
 };
 
 const updateUserDetails = async (payload, accessToken) => {
-  // console.log(payload);
   return await axios.request({
     method: 'PUT',
     url: `${API_URL}/api/v1/profile`,

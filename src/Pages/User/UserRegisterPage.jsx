@@ -94,8 +94,6 @@ export default function UserRegister() {
 
   const { getRootProps, getRadioProps } = useRadioGroup({
     name: 'gender',
-    // defaultValue: user.accountInfo?.patient.gender,
-    // onChange: console.log,
   });
 
   const group = getRootProps();

@@ -59,7 +59,6 @@ export default function DashboardProfileEdit() {
   });
 
   const handleSubmit = async values => {
-    // console.log(values);
     let payload = {
       first_name: values.first_name,
       last_name: values.last_name,
@@ -78,9 +77,9 @@ export default function DashboardProfileEdit() {
             message: 'Your information has been updated successfully.',
             type: 'success',
             variant: 'solid',
-            position: 'top',
+            position: 'top-right',
+            dashboard: true,
           });
-          //   navigate('/user-success');
           setIsLoading(false);
         }
       })
@@ -92,6 +91,8 @@ export default function DashboardProfileEdit() {
           type: 'error',
           variant: 'solid',
           position: 'top',
+          position: 'top-right',
+          dashboard: true,
         });
       });
   };

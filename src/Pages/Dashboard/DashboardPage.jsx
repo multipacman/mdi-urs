@@ -37,11 +37,8 @@ export default function Dashboard() {
   const dispatch = useDispatch();
 
   const handleChange = () => {
-    // console.log(e);
     selectFile({ accept: 'image/*' });
   };
-
-  // console.log(file);
 
   useEffect(() => {
     if (!!auth.access_token || !!user) {
@@ -59,7 +56,8 @@ export default function Dashboard() {
             message: 'Your information has been updated successfully.',
             type: 'success',
             variant: 'solid',
-            position: 'top',
+            position: 'top-right',
+            dashboard: true,
           });
           setUploadButtonLoading(false);
         })
@@ -69,7 +67,8 @@ export default function Dashboard() {
             message: 'Please try again.',
             type: 'error',
             variant: 'solid',
-            position: 'top',
+            position: 'top-right',
+            dashboard: true,
           });
           setUploadButtonLoading(true);
         });
