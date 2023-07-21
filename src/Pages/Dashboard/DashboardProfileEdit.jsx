@@ -289,6 +289,7 @@ export default function DashboardProfileEdit() {
                           </HStack>
 
                           <Button
+                            bg={'blue.700'}
                             size="lg"
                             w={'100%'}
                             mt={7}

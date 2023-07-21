@@ -63,7 +63,7 @@ export default function UserLogin() {
   }, [auth, navigate, dispatch]);
 
   return (
-    <Box paddingTop={'10%'} bg={'blue.600'}>
+    <Box paddingTop={'10%'} bg={'blue.700'}>
       <ScaleFade initialScale={'0.9'} in={true}>
         <Center>
           <VStack>
@@ -82,7 +82,7 @@ export default function UserLogin() {
 
             <Card w={[300, 400, 500]} borderRadius="2xl">
               <CardHeader textAlign={'center'}>
-                <Heading textColor={'blue.600'} size="xl">
+                <Heading textColor={'blue.700'} size="xl">
                   ABC COMPANY
                 </Heading>
               </CardHeader>
@@ -131,6 +131,7 @@ export default function UserLogin() {
                           <FormErrorMessage>{errors.password}</FormErrorMessage>
                         </FormControl>
                         <Button
+                          bg={'blue.700'}
                           size="lg"
                           w={'100%'}
                           mt={7}

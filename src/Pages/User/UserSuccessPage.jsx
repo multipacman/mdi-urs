@@ -22,7 +22,7 @@ export default function UserSuccess() {
   console.log();
   return (
     <>
-      <Box paddingTop={'18%'} bg={'blue.600'}>
+      <Box paddingTop={'18%'} bg={'blue.700'}>
         <ScaleFade initialScale={'0.9'} in={true}>
           <Center>
             <VStack>
@@ -33,13 +33,14 @@ export default function UserSuccess() {
                       <CheckIcon w={8} h={8} color="green.500" />
                     </CardHeader>
                     <CardBody>
-                      <Heading mb={4} textColor={'blue.600'} size="xl">
+                      <Heading mb={4} textColor={'blue.700'} size="xl">
                         Congratulations
                       </Heading>
                       <Text as={'b'}>
                         Your account has been created successfully.
                       </Text>
                       <Button
+                        bg={'blue.700'}
                         size="lg"
                         w={'100%'}
                         mt={7}
@@ -54,11 +55,12 @@ export default function UserSuccess() {
                   </>
                 ) : (
                   <CardBody>
-                    <Heading mb={4} textColor={'blue.600'} size="xl">
+                    <Heading mb={4} textColor={'blue.700'} size="xl">
                       Do you wish to register?
                     </Heading>
                     <Text as={'b'}>Few steps and you're good to go!</Text>
                     <Button
+                      bg={'blue.700'}
                       size="lg"
                       w={'100%'}
                       mt={7}

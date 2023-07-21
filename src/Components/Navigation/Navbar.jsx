@@ -40,6 +40,7 @@ export default function Navbar(props) {
             as={'b'}
             onClick={() => navigate('/profile')}
             cursor={'default'}
+            textColor={'blue.700'}
           >
             ABC Company
           </Box>
@@ -69,6 +70,7 @@ export default function Navbar(props) {
                   />
                 </MenuButton>
                 <MenuList
+                  mt={5}
                   bg={'gray.300'}
                   alignItems={'center'}
                   borderRadius={'lg'}
@@ -77,6 +79,9 @@ export default function Navbar(props) {
                     bg={'gray.300'}
                     fontSize={'md'}
                     onClick={() => navigate('/profile-edit')}
+                    _hover={{
+                      color: 'blue.700',
+                    }}
                   >
                     Edit Profile
                   </MenuItem>
@@ -87,6 +92,9 @@ export default function Navbar(props) {
                     onClick={() => {
                       dispatch(clearAuthInfo());
                       navigate('/');
+                    }}
+                    _hover={{
+                      color: 'blue.700',
                     }}
                   >
                     Sign Out

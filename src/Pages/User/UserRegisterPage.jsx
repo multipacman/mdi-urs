@@ -100,7 +100,7 @@ export default function UserRegister() {
   const group = getRootProps();
 
   return (
-    <Box paddingTop={'4%'} bg={'blue.600'}>
+    <Box paddingTop={'4%'} bg={'blue.700'}>
       <ScaleFade initialScale={'0.9'} in={true}>
         <Center>
           <VStack>
@@ -123,7 +123,7 @@ export default function UserRegister() {
             <Card w={[300, 400, 500]} borderRadius="2xl">
               <CardHeader textAlign={'center'}>
                 <Heading
-                  textColor={'blue.600'}
+                  textColor={'blue.700'}
                   textTransform={'uppercase'}
                   size="xl"
                 >
@@ -325,6 +325,7 @@ export default function UserRegister() {
                         </FormControl>
 
                         <Button
+                          bg={'blue.700'}
                           size="lg"
                           w={'100%'}
                           mt={7}

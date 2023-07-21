@@ -111,7 +111,15 @@ export default function Dashboard() {
                     <Box ml={7}>
                       <Heading textAlign={'start'}>
                         Welcome <br />
-                        {user.accountInfo.patient.name}
+                        <Heading color={'gray.500'}>
+                          {user.accountInfo?.patient?.gender === null ||
+                          user.accountInfo?.patient?.gender === 'other'
+                            ? null
+                            : user.accountInfo?.patient?.gender === 'male'
+                            ? 'Mr '
+                            : 'Mrs '}
+                          {user.accountInfo.patient.name}
+                        </Heading>
                       </Heading>
                     </Box>
                   </HStack>
@@ -125,7 +133,12 @@ export default function Dashboard() {
                       </Text>
                     </Box>
                     <Box w={'200px'}>
-                      <Text w={'100%'} textAlign={'end'}>
+                      <Text
+                        color={'gray.500'}
+                        w={'100%'}
+                        textAlign={'end'}
+                        fontWeight={'semibold'}
+                      >
                         {user.accountInfo.email}
                       </Text>
                     </Box>
@@ -140,7 +153,12 @@ export default function Dashboard() {
                       </Text>
                     </Box>
                     <Box w={'200px'}>
-                      <Text w={'100%'} textAlign={'end'}>
+                      <Text
+                        color={'gray.500'}
+                        w={'100%'}
+                        textAlign={'end'}
+                        fontWeight={'semibold'}
+                      >
                         {user.accountInfo.patient.full_name}
                       </Text>
                     </Box>
@@ -155,7 +173,12 @@ export default function Dashboard() {
                       </Text>
                     </Box>
                     <Box w={'200px'}>
-                      <Text w={'100%'} textAlign={'end'}>
+                      <Text
+                        color={'gray.500'}
+                        w={'100%'}
+                        textAlign={'end'}
+                        fontWeight={'semibold'}
+                      >
                         {user.accountInfo.patient.gender}
                       </Text>
                     </Box>
@@ -170,7 +193,12 @@ export default function Dashboard() {
                       </Text>
                     </Box>
                     <Box w={'200px'}>
-                      <Text w={'100%'} textAlign={'end'}>
+                      <Text
+                        color={'gray.500'}
+                        w={'100%'}
+                        textAlign={'end'}
+                        fontWeight={'semibold'}
+                      >
                         {user.accountInfo.patient.dob}
                       </Text>
                     </Box>
