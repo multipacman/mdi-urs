@@ -78,7 +78,7 @@ export default function DashboardProfileEdit() {
             message: 'Your information has been updated successfully.',
             type: 'success',
             variant: 'solid',
-            position: 'bottom',
+            position: 'top',
           });
           //   navigate('/user-success');
           setIsLoading(false);
@@ -91,7 +91,7 @@ export default function DashboardProfileEdit() {
           message: 'Please try again.',
           type: 'error',
           variant: 'solid',
-          position: 'bottom',
+          position: 'top',
         });
       });
   };

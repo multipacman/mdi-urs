@@ -20,12 +20,14 @@ import {
   ScaleFade,
   Text,
   VStack,
+  useRadioGroup,
 } from '@chakra-ui/react';
 import { Formik, Form, Field } from 'formik';
 import * as Yup from 'yup';
 import userService from '../../services/user.services';
 import { SingleDatepicker } from 'chakra-dayzed-datepicker';
 import { CustomToast } from '../../Components/Common/ToastNotification';
+import RadioCard from '../../Components/Common/RadioCard';
 
 export default function UserRegister() {
   const [checkEmail, setCheckEmail] = useState(false);
@@ -68,14 +70,14 @@ export default function UserRegister() {
       confirm_password: values.re_password,
       dob: date.toISOString().substring(0, 10),
       mobile_number: values.mobile,
-      gender: 'male',
+      gender: values.gender,
     };
 
     userService
       .registerNewUser({ payload })
       .then(res => {
         if (res.status === 200) {
-          navigate('/user-success');
+          navigate('/user-success', { state: { view: true } });
           setIsLoading(false);
         }
       })
@@ -87,6 +89,16 @@ export default function UserRegister() {
         });
       });
   };
+
+  const options = ['male', 'female', 'other'];
+
+  const { getRootProps, getRadioProps } = useRadioGroup({
+    name: 'gender',
+    // defaultValue: user.accountInfo?.patient.gender,
+    // onChange: console.log,
+  });
+
+  const group = getRootProps();
 
   return (
     <Box paddingTop={'4%'} bg={'blue.600'}>
@@ -253,6 +265,24 @@ export default function UserRegister() {
                           <FormErrorMessage>{errors.mobile}</FormErrorMessage>
                         </FormControl>
 
+                        <HStack
+                          mt={8}
+                          justifyContent={'space-between'}
+                          {...group}
+                          onChange={handleChange}
+                          name="gender"
+                          id="gender"
+                        >
+                          {options.map(value => {
+                            const radio = getRadioProps({ value });
+                            return (
+                              <RadioCard key={value} props={radio}>
+                                {value}
+                              </RadioCard>
+                            );
+                          })}
+                        </HStack>
+
                         <FormControl
                           mt={4}
                           isInvalid={errors.password && touched.password}
@@ -297,7 +327,6 @@ export default function UserRegister() {
                           variant="solid"
                           type="submit"
                           isLoading={isLoading}
-                          // onClick={() => navigate('/user-success')}
                         >
                           Create Account
                         </Button>

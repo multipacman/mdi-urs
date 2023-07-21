@@ -28,6 +28,7 @@ import { CustomToast } from '../../Components/Common/ToastNotification';
 export default function Dashboard() {
   const user = useSelector(state => state.user);
   const auth = useSelector(state => state.auth);
+  const [uploadButtonLoading, setUploadButtonLoading] = useState(false);
   const [file, selectFile] = useFileUpload();
   const { toastNotification } = CustomToast();
 
@@ -48,6 +49,7 @@ export default function Dashboard() {
     }
 
     if (!!file) {
+      setUploadButtonLoading(true);
       userService
         .updateUserProfilePic(file, auth.access_token)
         .then(res => {
@@ -57,18 +59,20 @@ export default function Dashboard() {
             message: 'Your information has been updated successfully.',
             type: 'success',
             variant: 'solid',
-            position: 'bottom',
+            position: 'top',
           });
+          setUploadButtonLoading(false);
         })
-        .catch(e =>
+        .catch(e => {
           toastNotification({
             title: 'Something went wrong!',
             message: 'Please try again.',
             type: 'error',
             variant: 'solid',
-            position: 'bottom',
-          })
-        );
+            position: 'top',
+          });
+          setUploadButtonLoading(true);
+        });
     }
   }, [auth, file, dispatch]);
 
@@ -104,6 +108,7 @@ export default function Dashboard() {
                           mt={'-20px'}
                           position={'absolute'}
                           icon={<AddIcon />}
+                          isLoading={uploadButtonLoading}
                           onClick={() => handleChange()}
                         />
                       </ScaleFade>
