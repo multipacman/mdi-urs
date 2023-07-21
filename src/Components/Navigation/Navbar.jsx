@@ -80,6 +80,18 @@ export default function Navbar(props) {
                     bg={'gray.300'}
                     fontSize={'sm'}
                     fontWeight={'semibold'}
+                    onClick={() => navigate('/profile')}
+                    _hover={{
+                      color: 'blue.700',
+                    }}
+                  >
+                    Dashboard
+                  </MenuItem>
+                  <MenuDivider mx={2} />
+                  <MenuItem
+                    bg={'gray.300'}
+                    fontSize={'sm'}
+                    fontWeight={'semibold'}
                     onClick={() => navigate('/profile-edit')}
                     _hover={{
                       color: 'blue.700',
