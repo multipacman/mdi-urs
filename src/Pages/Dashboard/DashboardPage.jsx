@@ -75,6 +75,7 @@ export default function Dashboard() {
                         in={user.accountInfo.patient.profile_image.resource}
                       >
                         <Image
+                          rounded={'full'}
                           src={
                             files?.source ||
                             user.accountInfo.patient.profile_image.resource
@@ -88,8 +89,8 @@ export default function Dashboard() {
                           colorScheme="gray"
                           aria-label="Done"
                           fontSize="20px"
-                          ml={'35px'}
-                          mt={'-20px'}
+                          ml={'30px'}
+                          mt={'-35px'}
                           position={'absolute'}
                           icon={<AddIcon />}
                           isLoading={uploadButtonLoading}
