@@ -2,7 +2,6 @@ import React, { useRef, useState } from 'react';
 import { Navigate, useNavigate } from 'react-router-dom';
 import { ChevronLeftIcon } from '@chakra-ui/icons';
 import {
-  Box,
   Button,
   Card,
   CardBody,
