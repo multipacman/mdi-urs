@@ -3,7 +3,6 @@ import { Navigate, useLocation, useNavigate } from 'react-router-dom';
 import { CheckIcon } from '@chakra-ui/icons';
 
 import {
-  Box,
   Button,
   Card,
   CardBody,
@@ -25,7 +24,7 @@ export default function UserSuccess() {
     <Navigate to="/" />
   ) : (
     <>
-      <Box paddingTop={'18%'} bg={'blue.700'}>
+      <Center bg={'blue.700'}>
         <ScaleFade initialScale={'0.9'} in={true}>
           <Center>
             <VStack>
@@ -88,7 +87,7 @@ export default function UserSuccess() {
             </VStack>
           </Center>
         </ScaleFade>
-      </Box>
+      </Center>
     </>
   );
 }

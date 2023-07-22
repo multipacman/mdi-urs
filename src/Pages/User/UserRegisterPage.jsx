@@ -105,7 +105,7 @@ export default function UserRegister() {
   return user ? (
     <Navigate to="/" />
   ) : (
-    <Box paddingTop={'4%'} bg={'blue.700'}>
+    <Center py={12} bg={'blue.700'}>
       <ScaleFade initialScale={'0.9'} in={true}>
         <Center>
           <VStack>
@@ -302,6 +302,7 @@ export default function UserRegister() {
                             as={Input}
                             name="password"
                             id="password"
+                            type="password"
                             placeholder="Enter password"
                             onChange={handleChange}
                             value={values.password}
@@ -320,6 +321,7 @@ export default function UserRegister() {
                             as={Input}
                             name="re_password"
                             id="re_password"
+                            type="password"
                             placeholder="Enter password"
                             onChange={handleChange}
                             value={values.re_password}
@@ -348,7 +350,6 @@ export default function UserRegister() {
               </CardBody>
             </Card>
             <Text
-              mb={12}
               ml={2}
               textColor={'white'}
               alignSelf={'start'}
@@ -359,6 +360,6 @@ export default function UserRegister() {
           </VStack>
         </Center>
       </ScaleFade>
-    </Box>
+    </Center>
   );
 }

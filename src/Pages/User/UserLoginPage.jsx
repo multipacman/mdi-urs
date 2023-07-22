@@ -1,7 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
-  Box,
   Button,
   Card,
   CardBody,
@@ -13,6 +12,8 @@ import {
   FormLabel,
   Heading,
   Input,
+  InputGroup,
+  InputRightElement,
   Link,
   ScaleFade,
   Text,
@@ -24,9 +25,11 @@ import { userLogin } from '../../slices/auth';
 import * as Yup from 'yup';
 import { Formik, Form, Field } from 'formik';
 import { CustomToast } from '../../Components/Common/ToastNotification';
+import { ViewIcon, ViewOffIcon } from '@chakra-ui/icons';
 
 export default function UserLogin() {
   const [isLoading, setIsLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
   const { toastNotification } = CustomToast();
 
   let navigate = useNavigate();
@@ -63,7 +66,7 @@ export default function UserLogin() {
   }, [auth, navigate, dispatch]);
 
   return (
-    <Box paddingTop={'10%'} bg={'blue.700'}>
+    <Center bg={'blue.700'}>
       <ScaleFade initialScale={'0.9'} in={true}>
         <Center>
           <VStack>
@@ -120,14 +123,30 @@ export default function UserLogin() {
                           isInvalid={errors.password && touched.password}
                         >
                           <FormLabel fontWeight={'bold'}>Password</FormLabel>
-                          <Field
-                            as={Input}
-                            name="password"
-                            id="password"
-                            placeholder="Enter password"
-                            onChange={handleChange}
-                            value={values.password}
-                          />
+                          <InputGroup>
+                            <Field
+                              as={Input}
+                              name="password"
+                              id="password"
+                              type={showPassword ? 'text' : 'password'}
+                              placeholder="Enter password"
+                              onChange={handleChange}
+                              value={values.password}
+                            />
+                            <InputRightElement
+                              onClick={() => setShowPassword(!showPassword)}
+                              mr={2}
+                              cursor={'pointer'}
+                              children={
+                                showPassword ? (
+                                  <ViewOffIcon color="gray.700" />
+                                ) : (
+                                  <ViewIcon color="gray.700" />
+                                )
+                              }
+                            />
+                          </InputGroup>
+
                           <FormErrorMessage>{errors.password}</FormErrorMessage>
                         </FormControl>
                         <Button
@@ -172,6 +191,6 @@ export default function UserLogin() {
           </VStack>
         </Center>
       </ScaleFade>
-    </Box>
+    </Center>
   );
 }
