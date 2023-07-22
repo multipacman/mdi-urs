@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
+import { Navigate, useNavigate } from 'react-router-dom';
 import {
   Button,
   Card,
@@ -16,18 +17,20 @@ import {
   InputRightElement,
   Link,
   ScaleFade,
+  Spinner,
   Text,
   VStack,
 } from '@chakra-ui/react';
-import { useDispatch, useSelector } from 'react-redux';
 import { getUserDetails } from '../../slices/user';
-import { userLogin } from '../../slices/auth';
+import { clearAuthInfo, userLogin } from '../../slices/auth';
 import * as Yup from 'yup';
 import { Formik, Form, Field } from 'formik';
 import { CustomToast } from '../../Components/Common/ToastNotification';
 import { ViewIcon, ViewOffIcon } from '@chakra-ui/icons';
+import authService from '../../services/auth.services';
 
 export default function UserLogin() {
+  const user = useSelector(state => state.user);
   const [isLoading, setIsLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const { toastNotification } = CustomToast();
@@ -60,141 +63,167 @@ export default function UserLogin() {
   useEffect(() => {
     if (!!auth.access_token) {
       dispatch(getUserDetails(auth.access_token)).then(res => {
-        if (!!res.payload) {
+        if (!!res.payload && !!authService.isLoggedIn()) {
           navigate('/profile');
-          setIsLoading(false);
+        } else {
+          dispatch(clearAuthInfo());
         }
       });
       setIsLoading(false);
     }
   }, [auth, navigate, dispatch]);
 
-  return (
-    <Center bg={'blue.700'}>
-      <ScaleFade initialScale={'0.9'} in={true}>
-        <Center>
-          <VStack>
-            <Heading ml={2} textColor={'white'} alignSelf={'start'} size={'xl'}>
-              Welcome Back
-            </Heading>
-            <Text
-              ml={2}
-              textColor={'whiteAlpha.800'}
-              alignSelf={'start'}
-              size={'sm'}
-              as={'b'}
-            >
-              Login to your account
-            </Text>
-
-            <Card w={[300, 400, 500]} borderRadius="2xl">
-              <CardHeader textAlign={'center'}>
-                <Heading textColor={'blue.700'} size="xl">
-                  ABC COMPANY
-                </Heading>
-              </CardHeader>
-              <CardBody>
-                <Formik
-                  innerRef={formRef}
-                  enableReinitialize
-                  initialValues={{ username: '', password: '' }}
-                  validationSchema={validationSchema}
-                  onSubmit={async values => {
-                    await handleSubmit(values);
-                    setIsLoading(true);
-                  }}
+  return !user.accountInfo && !!authService.isLoggedIn() ? (
+    <>
+      <Center h={'100vh'}>
+        <Spinner />
+      </Center>
+    </>
+  ) : (
+    <>
+      {!!user.accountInfo ? (
+        <Navigate to="/profile" replace />
+      ) : (
+        <Center bg={'blue.700'}>
+          <ScaleFade initialScale={'0.9'} in={true}>
+            <Center>
+              <VStack>
+                <Heading
+                  ml={2}
+                  textColor={'white'}
+                  alignSelf={'start'}
+                  size={'xl'}
                 >
-                  {({ values, handleChange, errors, touched }) => {
-                    return (
-                      <Form>
-                        <FormControl
-                          isInvalid={errors.username && touched.username}
-                        >
-                          <FormLabel fontWeight={'bold'}>User Name</FormLabel>
-                          <Field
-                            as={Input}
-                            name="username"
-                            id="username"
-                            placeholder="Enter username"
-                            onChange={handleChange}
-                            value={values.username}
-                          />
-                          <FormErrorMessage>{errors.username}</FormErrorMessage>
-                        </FormControl>
-
-                        <FormControl
-                          mt={4}
-                          isInvalid={errors.password && touched.password}
-                        >
-                          <FormLabel fontWeight={'bold'}>Password</FormLabel>
-                          <InputGroup>
-                            <Field
-                              as={Input}
-                              name="password"
-                              id="password"
-                              type={showPassword ? 'text' : 'password'}
-                              placeholder="Enter password"
-                              onChange={handleChange}
-                              value={values.password}
-                            />
-                            <InputRightElement
-                              onClick={() => setShowPassword(!showPassword)}
-                              mr={2}
-                              cursor={'pointer'}
-                              children={
-                                showPassword ? (
-                                  <ViewOffIcon color="gray.700" />
-                                ) : (
-                                  <ViewIcon color="gray.700" />
-                                )
-                              }
-                            />
-                          </InputGroup>
-
-                          <FormErrorMessage>{errors.password}</FormErrorMessage>
-                        </FormControl>
-                        <Button
-                          bg={'blue.700'}
-                          size="lg"
-                          w={'100%'}
-                          mt={7}
-                          colorScheme="blue"
-                          variant="solid"
-                          type="submit"
-                          isLoading={isLoading}
-                          isDisabled={!values.username || !values.password}
-                        >
-                          Login
-                        </Button>
-                      </Form>
-                    );
-                  }}
-                </Formik>
-              </CardBody>
-              <CardFooter mb={4}>
-                <Text as={'b'}>
-                  Still no account?{' '}
-                  <Link
-                    onClick={() => navigate('register')}
-                    textColor={'orange.400'}
-                  >
-                    SIGNUP
-                  </Link>{' '}
-                  here
+                  Welcome Back
+                </Heading>
+                <Text
+                  ml={2}
+                  textColor={'whiteAlpha.800'}
+                  alignSelf={'start'}
+                  size={'sm'}
+                  as={'b'}
+                >
+                  Login to your account
                 </Text>
-              </CardFooter>
-            </Card>
-            <Text
-              ml={2}
-              textColor={'white'}
-              alignSelf={'start'}
-              fontSize="15px"
-            >
-              Version 1.0
-            </Text>
-          </VStack>
+
+                <Card w={[300, 400, 500]} borderRadius="2xl">
+                  <CardHeader textAlign={'center'}>
+                    <Heading textColor={'blue.700'} size="xl">
+                      ABC COMPANY
+                    </Heading>
+                  </CardHeader>
+                  <CardBody>
+                    <Formik
+                      innerRef={formRef}
+                      enableReinitialize
+                      initialValues={{ username: '', password: '' }}
+                      validationSchema={validationSchema}
+                      onSubmit={async values => {
+                        await handleSubmit(values);
+                        setIsLoading(true);
+                      }}
+                    >
+                      {({ values, handleChange, errors, touched }) => {
+                        return (
+                          <Form>
+                            <FormControl
+                              isInvalid={errors.username && touched.username}
+                            >
+                              <FormLabel fontWeight={'bold'}>
+                                User Name
+                              </FormLabel>
+                              <Field
+                                as={Input}
+                                name="username"
+                                id="username"
+                                placeholder="Enter username"
+                                onChange={handleChange}
+                                value={values.username}
+                              />
+                              <FormErrorMessage>
+                                {errors.username}
+                              </FormErrorMessage>
+                            </FormControl>
+
+                            <FormControl
+                              mt={4}
+                              isInvalid={errors.password && touched.password}
+                            >
+                              <FormLabel fontWeight={'bold'}>
+                                Password
+                              </FormLabel>
+                              <InputGroup>
+                                <Field
+                                  as={Input}
+                                  name="password"
+                                  id="password"
+                                  type={showPassword ? 'text' : 'password'}
+                                  placeholder="Enter password"
+                                  onChange={handleChange}
+                                  value={values.password}
+                                />
+                                <InputRightElement
+                                  onClick={() => setShowPassword(!showPassword)}
+                                  mr={2}
+                                  cursor={'pointer'}
+                                  children={
+                                    showPassword ? (
+                                      <ViewOffIcon color="gray.700" />
+                                    ) : (
+                                      <ViewIcon color="gray.700" />
+                                    )
+                                  }
+                                />
+                              </InputGroup>
+
+                              <FormErrorMessage>
+                                {errors.password}
+                              </FormErrorMessage>
+                            </FormControl>
+                            <Button
+                              bg={'blue.700'}
+                              size="lg"
+                              w={'100%'}
+                              mt={7}
+                              colorScheme="blue"
+                              variant="solid"
+                              type="submit"
+                              isLoading={isLoading}
+                              isDisabled={!values.username || !values.password}
+                            >
+                              Login
+                            </Button>
+                          </Form>
+                        );
+                      }}
+                    </Formik>
+                  </CardBody>
+                  <CardFooter mb={4}>
+                    <Text as={'b'}>
+                      Still no account?{' '}
+                      <Link
+                        onClick={() => navigate('register')}
+                        textColor={'orange.400'}
+                      >
+                        SIGNUP
+                      </Link>{' '}
+                      here
+                    </Text>
+                  </CardFooter>
+                </Card>
+                <Text
+                  ml={2}
+                  textColor={'white'}
+                  alignSelf={'start'}
+                  fontSize="15px"
+                >
+                  Version 1.0
+                </Text>
+              </VStack>
+            </Center>
+          </ScaleFade>
         </Center>
-      </ScaleFade>
-    </Center>
+      )}
+    </>
   );
 }

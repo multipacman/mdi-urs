@@ -56,7 +56,6 @@ const authSlice = createSlice({
     });
 
     builder.addCase(userLogout.fulfilled, (state, action) => {
-      console.log(action);
       if (action?.payload?.data.result.status) {
         localStorage.removeItem('authToken');
         return {
