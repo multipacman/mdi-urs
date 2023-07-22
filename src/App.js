@@ -1,7 +1,7 @@
 import React from 'react';
 import { ChakraProvider, Box, Grid, theme } from '@chakra-ui/react';
 // import { ColorModeSwitcher } from './ColorModeSwitcher';
-import { BrowserRouter, Route, Routes } from 'react-router-dom';
+import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
 import Dashboard from './Pages/Dashboard/DashboardPage';
 import UserLogin from './Pages/User/UserLoginPage';
 import UserRegister from './Pages/User/UserRegisterPage';
@@ -27,6 +27,7 @@ function App() {
                   element={<DashboardProfileEdit />}
                 />
               </Route>
+              <Route path="*" element={<Navigate to="/" replace />} />
             </Routes>
           </BrowserRouter>
         </Grid>

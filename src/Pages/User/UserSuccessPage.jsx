@@ -1,5 +1,5 @@
 import React from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { Navigate, useLocation, useNavigate } from 'react-router-dom';
 import { CheckIcon } from '@chakra-ui/icons';
 
 import {
@@ -14,13 +14,16 @@ import {
   Text,
   VStack,
 } from '@chakra-ui/react';
+import authService from '../../services/auth.services';
 
 export default function UserSuccess() {
   let { state } = useLocation();
   let navigate = useNavigate();
+  let user = authService.isLoggedIn();
 
-  console.log();
-  return (
+  return user ? (
+    <Navigate to="/" />
+  ) : (
     <>
       <Box paddingTop={'18%'} bg={'blue.700'}>
         <ScaleFade initialScale={'0.9'} in={true}>

@@ -1,5 +1,5 @@
 import React, { useRef, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Navigate, useNavigate } from 'react-router-dom';
 import { ChevronLeftIcon } from '@chakra-ui/icons';
 import {
   Box,
@@ -28,12 +28,15 @@ import userService from '../../services/user.services';
 import { SingleDatepicker } from 'chakra-dayzed-datepicker';
 import { CustomToast } from '../../Components/Common/ToastNotification';
 import RadioCard from '../../Components/Common/RadioCard';
+import authService from '../../services/auth.services';
+import moment from 'moment';
 
 export default function UserRegister() {
   const [checkEmail, setCheckEmail] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [date, setDate] = useState(new Date());
   const { toastNotification } = CustomToast();
+  let user = authService.isLoggedIn();
 
   let navigate = useNavigate();
   const formRef = useRef(null);
@@ -69,7 +72,7 @@ export default function UserRegister() {
       last_name: values.last_name,
       password: values.password,
       confirm_password: values.re_password,
-      dob: date.toISOString().substring(0, 10),
+      dob: moment(date).format('YYYY-MM-DD'),
       mobile_number: values.mobile,
       gender: values.gender,
     };
@@ -99,7 +102,9 @@ export default function UserRegister() {
 
   const group = getRootProps();
 
-  return (
+  return user ? (
+    <Navigate to="/" />
+  ) : (
     <Box paddingTop={'4%'} bg={'blue.700'}>
       <ScaleFade initialScale={'0.9'} in={true}>
         <Center>

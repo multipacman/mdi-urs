@@ -24,6 +24,7 @@ import { SingleDatepicker } from 'chakra-dayzed-datepicker';
 import RadioCard from '../../Components/Common/RadioCard';
 import userService from '../../services/user.services';
 import { CustomToast } from '../../Components/Common/ToastNotification';
+import moment from 'moment';
 
 export default function DashboardProfileEdit() {
   const user = useSelector(state => state.user);
@@ -54,7 +55,7 @@ export default function DashboardProfileEdit() {
       first_name: values.first_name,
       last_name: values.last_name,
       email: values.email,
-      dob: !date ? values.dob : date.toISOString().substring(0, 10),
+      dob: !date ? values.dob : moment(date).format('YYYY-MM-DD'),
       gender: values.gender,
     };
 
