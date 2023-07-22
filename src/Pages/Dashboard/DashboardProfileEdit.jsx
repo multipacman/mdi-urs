@@ -231,8 +231,11 @@ export default function DashboardProfileEdit() {
                             <FormErrorMessage>{errors.dob}</FormErrorMessage>
                           </FormControl>
 
+                          <FormLabel mt={4} fontWeight={'bold'}>
+                            Gender
+                          </FormLabel>
                           <HStack
-                            mt={8}
+                            // mt={8}
                             justifyContent={'space-between'}
                             {...group}
                             onChange={handleChange}
