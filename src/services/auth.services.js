@@ -23,6 +23,17 @@ const userLogin = payload => {
   return login;
 };
 
+const userLogout = async accessToken => {
+  return await axios.request({
+    method: 'GET',
+    url: `${API_URL}/api/v1/logout`,
+    headers: {
+      Accept: 'application/json',
+      Authorization: `Bearer ${accessToken}`,
+    },
+  });
+};
+
 const storeUserAccessToken = (
   token_type,
   expires_in,
@@ -54,6 +65,7 @@ const isLoggedIn = () => {
 
 const authService = {
   userLogin,
+  userLogout,
   storeUserAccessToken,
   retrieveUserAccessToken,
   isLoggedIn,

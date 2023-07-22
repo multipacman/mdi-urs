@@ -59,8 +59,12 @@ export default function UserLogin() {
 
   useEffect(() => {
     if (!!auth.access_token) {
-      dispatch(getUserDetails(auth.access_token));
-      navigate('/profile');
+      dispatch(getUserDetails(auth.access_token)).then(res => {
+        if (!!res.payload) {
+          navigate('/profile');
+          setIsLoading(false);
+        }
+      });
       setIsLoading(false);
     }
   }, [auth, navigate, dispatch]);

@@ -13,7 +13,7 @@ import {
 } from '@chakra-ui/react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-import { clearAuthInfo } from '../../slices/auth';
+import { userLogout } from '../../slices/auth';
 import { clearUserInfo } from '../../slices/user';
 import { getUserDetails } from '../../slices/user';
 import { useEffect } from 'react';
@@ -105,7 +105,7 @@ export default function Navbar(props) {
                     fontSize={'sm'}
                     fontWeight={'semibold'}
                     onClick={() => {
-                      dispatch(clearAuthInfo());
+                      dispatch(userLogout(auth.access_token));
                       dispatch(clearUserInfo());
                       navigate('/');
                     }}
