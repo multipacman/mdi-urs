@@ -131,50 +131,44 @@ export default function DashboardProfileEdit() {
                       return (
                         <Form>
                           <HStack>
-                            <Box>
-                              <FormControl
-                                isInvalid={
-                                  errors.first_name && touched.first_name
-                                }
-                              >
-                                <FormLabel fontWeight={'bold'}>
-                                  First Name
-                                </FormLabel>
-                                <Field
-                                  as={Input}
-                                  name="first_name"
-                                  id="first_name"
-                                  placeholder="Enter first name"
-                                  onChange={handleChange}
-                                  value={values.first_name}
-                                />
-                                <FormErrorMessage>
-                                  {errors.first_name}
-                                </FormErrorMessage>
-                              </FormControl>
-                            </Box>
-                            <Box>
-                              <FormControl
-                                isInvalid={
-                                  errors.last_name && touched.last_name
-                                }
-                              >
-                                <FormLabel fontWeight={'bold'}>
-                                  Last Name
-                                </FormLabel>
-                                <Field
-                                  as={Input}
-                                  name="last_name"
-                                  id="last_name"
-                                  placeholder="Enter last name"
-                                  onChange={handleChange}
-                                  value={values.last_name}
-                                />
-                                <FormErrorMessage>
-                                  {errors.last_name}
-                                </FormErrorMessage>
-                              </FormControl>
-                            </Box>
+                            <FormControl
+                              isInvalid={
+                                errors.first_name && touched.first_name
+                              }
+                            >
+                              <FormLabel fontWeight={'bold'}>
+                                First Name
+                              </FormLabel>
+                              <Field
+                                as={Input}
+                                name="first_name"
+                                id="first_name"
+                                placeholder="Enter first name"
+                                onChange={handleChange}
+                                value={values.first_name}
+                              />
+                              <FormErrorMessage>
+                                {errors.first_name}
+                              </FormErrorMessage>
+                            </FormControl>
+                            <FormControl
+                              isInvalid={errors.last_name && touched.last_name}
+                            >
+                              <FormLabel fontWeight={'bold'}>
+                                Last Name
+                              </FormLabel>
+                              <Field
+                                as={Input}
+                                name="last_name"
+                                id="last_name"
+                                placeholder="Enter last name"
+                                onChange={handleChange}
+                                value={values.last_name}
+                              />
+                              <FormErrorMessage>
+                                {errors.last_name}
+                              </FormErrorMessage>
+                            </FormControl>
                           </HStack>
 
                           <FormControl
