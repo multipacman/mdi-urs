@@ -12,7 +12,9 @@ export const getUserDetails = createAsyncThunk(
       const data = await userService.getUserDetails(accessToken);
       let response = { accountInfo: data.data };
       return response;
-    } catch (error) {}
+    } catch (error) {
+      return error;
+    }
   }
 );
 
@@ -30,8 +32,8 @@ const userSlice = createSlice({
   extraReducers: builder => {
     // Add reducers for additional action types here, and handle loading state as needed
     builder.addCase(getUserDetails.fulfilled, (state, action) => {
-      //   console.log(state, action);
-      state.accountInfo = action?.payload?.accountInfo.result;
+      // console.log(state, action);
+      state.accountInfo = action?.payload?.accountInfo?.result;
     });
   },
 });
